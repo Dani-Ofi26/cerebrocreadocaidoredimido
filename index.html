@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cerebro: creado, caído, redimido · Curso</title>
+<meta name="description" content="Curso asincrónico de Elba Somoza y Daniela Serraino.">
+<meta name="theme-color" content="#FCF1F4">
+<link rel="icon" href="assets/cerebro.png">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800;900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#FCF1F4;color:#161316;font-family:'Rubik',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#7A3FB8}a:hover{color:#161316}
+*{box-sizing:border-box}
+@media print{[data-noprint]{display:none!important}body{background:#fff}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<sc-if value="{{ isRegister }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Registro" style="min-height:100vh;display:grid;place-items:center;padding:24px">
+    <div style="width:100%;max-width:460px;display:flex;flex-direction:column;gap:20px">
+      <img src="assets/cerebro.png" alt="Cerebro: creado, caído, redimido" style="width:100%;border-radius:20px;display:block"></img>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <h1 style="margin:0;font-size:28px;font-weight:800;letter-spacing:-0.01em">Bienvenida al curso</h1>
+        <p style="margin:0;font-size:16px;line-height:1.5;color:#4a4148">Curso asincrónico de Elba Somoza y Daniela Serraino. Tu nombre aparecerá en el certificado de participación.</p>
+      </div>
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:500">Nombre y apellido
+        <input value="{{ formName }}" onChange="{{ setFormName }}" placeholder="Como quieres que figure en el certificado" style="font:inherit;font-size:16px;padding:14px 16px;border-radius:12px;border:2px solid #161316;background:#fff;outline:none"></input>
+      </label>
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:500">Correo electrónico
+        <input value="{{ formEmail }}" onChange="{{ setFormEmail }}" type="email" placeholder="nombre@correo.com" style="font:inherit;font-size:16px;padding:14px 16px;border-radius:12px;border:2px solid #161316;background:#fff;outline:none"></input>
+      </label>
+      <button onClick="{{ register }}" style="font:inherit;font-size:17px;font-weight:700;padding:16px;border-radius:14px;border:none;background:#161316;color:#fff;cursor:pointer" style-hover="background:#7A3FB8">Comenzar el curso</button>
+      <sc-if value="{{ formError }}" hint-placeholder-val="{{ false }}"><p style="margin:0;color:#C8243F;font-size:14px">{{ formError }}</p></sc-if>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ true }}">
+  <header data-noprint="" style="position:sticky;top:0;z-index:5;background:#FCF1F4;border-bottom:2px solid #161316">
+    <div style="max-width:1120px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px">
+      <button onClick="{{ goHome }}" style="font:inherit;background:none;border:none;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:2px;white-space:nowrap">
+        <span style="font-size:22px;font-weight:900;letter-spacing:0.04em;color:#161316">CEREBRO</span>
+        <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;color:#4a4148">CREADO · CAÍDO · REDIMIDO</span>
+      </button>
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+        <nav style="display:flex;gap:4px">
+          <sc-for list="{{ nav }}" as="n" hint-placeholder-count="3">
+            <button onClick="{{ n.go }}" style="font:inherit;font-size:15px;font-weight:600;padding:9px 14px;border-radius:999px;border:none;cursor:pointer;background:{{ n.bg }};color:{{ n.fg }}">{{ n.label }}</button>
+          </sc-for>
+        </nav>
+      </sc-if>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size:13px;font-weight:700;padding:6px 10px;border-radius:999px;border:2px solid #161316;background:#fff;white-space:nowrap">{{ overallLabel }}</span>
+      </sc-if>
+    </div>
+  </header>
+
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <nav data-noprint="" style="position:fixed;left:0;right:0;bottom:0;z-index:6;background:#FCF1F4;border-top:2px solid #161316;display:grid;grid-template-columns:repeat(3,1fr);padding:6px 8px calc(6px + env(safe-area-inset-bottom));gap:6px">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="3">
+        <button onClick="{{ n.go }}" style="font:inherit;font-size:14px;font-weight:700;min-height:48px;border-radius:14px;border:none;cursor:pointer;background:{{ n.bg }};color:{{ n.fg }}">{{ n.label }}</button>
+      </sc-for>
+    </nav>
+  </sc-if>
+
+  <main style="flex:1;width:100%;max-width:1120px;margin:0 auto;padding:{{ mainPad }}">
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="Inicio" style="display:flex;flex-direction:column;gap:32px">
+      <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:28px;align-items:center">
+        <img src="assets/cerebro.png" alt="Cerebro: creado, caído, redimido" style="width:100%;border-radius:24px;display:block;border:2px solid #161316"></img>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <p style="margin:0;font-size:14px;font-weight:700;letter-spacing:0.08em;color:#7A3FB8">HOLA, {{ firstName }}</p>
+          <h1 style="margin:0;font-size:clamp(30px,4vw,44px);line-height:1.05;font-weight:800;letter-spacing:-0.02em;text-wrap:balance">El cerebro a la luz de la creación, la caída y la redención</h1>
+          <p style="margin:0;font-family:'Source Serif 4',serif;font-size:18px;line-height:1.55;color:#3a3238;text-wrap:pretty">Cuatro clases en video, cada una con lectura complementaria, cuestionario y preguntas de reflexión. Avanza a tu ritmo; al completar las cuatro obtienes tu certificado.</p>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+            <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:600"><span>Tu progreso</span><span>{{ overallLabel }}</span></div>
+            <div style="height:14px;border-radius:999px;background:#fff;border:2px solid #161316;overflow:hidden"><div style="height:100%;background:#F58A1F;width:{{ overallW }}"></div></div>
+          </div>
+          <button onClick="{{ continueCourse }}" style="align-self:flex-start;font:inherit;font-size:17px;font-weight:700;padding:14px 22px;border-radius:14px;border:none;background:#161316;color:#fff;cursor:pointer" style-hover="background:#7A3FB8">{{ continueLabel }}</button>
+        </div>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <h2 style="margin:0;font-size:22px;font-weight:800">Clases</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:16px">
+          <sc-for list="{{ units }}" as="u" hint-placeholder-count="4">
+            <button onClick="{{ u.open }}" style="font:inherit;text-align:left;cursor:{{ u.cursor }};opacity:{{ u.opacity }};padding:0;border:2px solid #161316;border-radius:20px;background:#fff;overflow:hidden;display:flex;flex-direction:column" style-hover="transform:translateY(-2px)">
+              <div style="background:{{ u.color }};padding:18px;display:flex;justify-content:space-between;align-items:flex-start;min-height:96px">
+                <span style="font-size:44px;font-weight:900;line-height:1;color:{{ u.ink }}">{{ u.num }}</span>
+                <span style="font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;background:#fff;color:#161316;border:2px solid #161316">{{ u.status }}</span>
+              </div>
+              <div style="padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:19px;font-weight:800;color:#161316">{{ u.title }}</span>
+                <span style="font-size:14px;line-height:1.45;color:#4a4148">{{ u.subtitle }}</span>
+              </div>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isUnit }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Clase" style="display:flex;flex-direction:column;gap:22px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <p style="margin:0;font-size:13px;font-weight:700;letter-spacing:0.1em;color:#4a4148">CLASE {{ cu.num }} DE 4</p>
+        <h1 style="margin:0;font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-0.02em;line-height:1.1">{{ cu.title }}</h1>
+      </div>
+
+      <div style="display:flex;gap:8px;overflow-x:auto;margin:0 -20px;padding:0 20px 4px;scrollbar-width:none">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+          <button onClick="{{ t.go }}" style="flex:none;white-space:nowrap;min-height:44px;font:inherit;font-size:15px;font-weight:700;padding:10px 16px;border-radius:12px;border:2px solid #161316;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};display:flex;gap:8px;align-items:center">{{ t.label }}<span style="font-size:12px;font-weight:600;opacity:0.8">{{ t.badge }}</span></button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ tabVideo }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div style="position:relative;width:100%;aspect-ratio:16/9;border-radius:20px;overflow:hidden;border:2px solid #161316;background:#161316">
+            <iframe src="{{ cu.embed }}" title="{{ cu.title }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen="{{ true }}" style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between">
+            <p style="margin:0;font-size:15px;color:#4a4148;max-width:560px">{{ cu.subtitle }}</p>
+            <button onClick="{{ markWatched }}" style="font:inherit;font-size:16px;font-weight:700;padding:13px 20px;border-radius:14px;border:2px solid #161316;cursor:pointer;background:{{ watchBg }};color:{{ watchFg }}">{{ watchLabel }}</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ tabReading }}" hint-placeholder-val="{{ false }}">
+        <article style="max-width:720px;display:flex;flex-direction:column;gap:22px">
+          <sc-for list="{{ cu.reading }}" as="p" hint-placeholder-count="3">
+            <p style="margin:0;font-family:'Source Serif 4',serif;font-size:19px;line-height:1.65;color:#241e23;text-wrap:pretty">{{ p }}</p>
+          </sc-for>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <h3 style="margin:0;font-size:14px;font-weight:800;letter-spacing:0.1em">FUNDAMENTO BÍBLICO</h3>
+            <sc-for list="{{ cu.verses }}" as="v" hint-placeholder-count="3">
+              <blockquote style="margin:0;padding:16px 18px;background:#fff;border:2px solid #161316;border-radius:16px;display:flex;flex-direction:column;gap:6px">
+                <span style="font-family:'Source Serif 4',serif;font-style:italic;font-size:18px;line-height:1.5">{{ v.text }}</span>
+                <span style="font-size:13px;font-weight:700;color:#4a4148">{{ v.ref }} (RVR1960)</span>
+              </blockquote>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <h3 style="margin:0;font-size:14px;font-weight:800;letter-spacing:0.1em">APORTES DE OTROS AUTORES</h3>
+            <sc-for list="{{ cu.authors }}" as="a" hint-placeholder-count="3">
+              <div style="display:flex;flex-direction:column;gap:4px;padding:14px 0;border-top:2px solid #161316">
+                <span style="font-size:17px;font-weight:700">{{ a.name }} · <span style="font-weight:500;font-style:italic">{{ a.work }}</span></span>
+                <span style="font-family:'Source Serif 4',serif;font-size:17px;line-height:1.55;color:#3a3238">{{ a.idea }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <button onClick="{{ goQuiz }}" style="align-self:flex-start;font:inherit;font-size:16px;font-weight:700;padding:13px 20px;border-radius:14px;border:none;background:#161316;color:#fff;cursor:pointer">Ir al cuestionario</button>
+        </article>
+      </sc-if>
+
+      <sc-if value="{{ tabQuiz }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:720px;display:flex;flex-direction:column;gap:20px">
+          <p style="margin:0;font-size:15px;color:#4a4148">Necesitas al menos {{ passPct }}% de respuestas correctas para aprobar. Puedes reintentar las veces que quieras.</p>
+          <sc-for list="{{ quiz }}" as="q" hint-placeholder-count="4">
+            <div style="display:flex;flex-direction:column;gap:10px;padding:18px;background:#fff;border:2px solid #161316;border-radius:18px">
+              <span style="font-size:17px;font-weight:700;line-height:1.35">{{ q.n }}. {{ q.q }}</span>
+              <sc-for list="{{ q.opts }}" as="o" hint-placeholder-count="3">
+                <button onClick="{{ o.pick }}" style="font:inherit;font-size:16px;text-align:left;padding:12px 14px;border-radius:12px;cursor:pointer;border:2px solid {{ o.bd }};background:{{ o.bg }};color:#161316;display:flex;gap:10px;align-items:center;line-height:1.35">
+                  <span style="flex:none;width:22px;height:22px;border-radius:50%;border:2px solid #161316;background:{{ o.dot }}"></span>{{ o.text }}
+                </button>
+              </sc-for>
+              <sc-if value="{{ q.showFund }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:12px;background:#D8F3E4;border:2px solid #1F8A55">
+                  <span style="font-size:12px;font-weight:800;letter-spacing:0.1em;color:#1F8A55">FUNDAMENTACIÓN</span>
+                  <span style="font-family:'Source Serif 4',serif;font-size:16px;line-height:1.5;color:#161316">{{ q.fund }}</span>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:18px;border-radius:18px;border:2px solid #161316;background:{{ resultBg }};display:flex;flex-direction:column;gap:4px">
+              <span style="font-size:20px;font-weight:800">{{ resultTitle }}</span>
+              <span style="font-size:15px">{{ resultText }}</span>
+            </div>
+          </sc-if>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button onClick="{{ submitQuiz }}" style="font:inherit;font-size:16px;font-weight:700;padding:13px 20px;border-radius:14px;border:none;background:#161316;color:#fff;cursor:pointer">{{ submitLabel }}</button>
+            <sc-if value="{{ canNext }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ goReflect }}" style="font:inherit;font-size:16px;font-weight:700;padding:13px 20px;border-radius:14px;border:2px solid #161316;background:#fff;cursor:pointer">Continuar a la reflexión</button>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ tabReflect }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:720px;display:flex;flex-direction:column;gap:18px">
+          <p style="margin:0;font-size:15px;color:#4a4148">Estas preguntas son personales y no se califican.</p>
+          <div style="display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:14px 16px;border-radius:14px;border:2px dashed #161316;background:#fff">
+            <span style="font-size:15px;line-height:1.45;flex:1 1 260px">Tus respuestas, reflexiones y notas se guardan solo en este dispositivo (celular o computadora). Nadie más las ve. Si borras los datos del navegador o cambias de equipo, se pierden: descárgalas para conservarlas.</span>
+            <button onClick="{{ downloadAll }}" style="flex:none;font:inherit;font-size:15px;font-weight:700;min-height:44px;padding:10px 16px;border-radius:12px;border:2px solid #161316;background:#F58A1F;color:#161316;cursor:pointer">Descargar mis respuestas</button>
+          </div>
+          <sc-for list="{{ reflections }}" as="r" hint-placeholder-count="2">
+            <label style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-family:'Source Serif 4',serif;font-size:19px;line-height:1.45;font-weight:600">{{ r.q }}</span>
+              <textarea value="{{ r.value }}" onChange="{{ r.change }}" rows="5" placeholder="Escribe aquí…" style="font:inherit;font-size:16px;line-height:1.5;padding:14px 16px;border-radius:14px;border:2px solid #161316;background:#fff;resize:vertical;outline:none"></textarea>
+            </label>
+          </sc-for>
+          <button onClick="{{ nextUnit }}" style="align-self:flex-start;font:inherit;font-size:16px;font-weight:700;padding:13px 20px;border-radius:14px;border:none;background:#161316;color:#fff;cursor:pointer">{{ nextLabel }}</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ tabNotes }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:720px;display:flex;flex-direction:column;gap:14px">
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:17px;font-weight:700">Mis notas de la clase {{ cu.num }}</span>
+            <textarea value="{{ notesValue }}" onChange="{{ notesChange }}" rows="12" placeholder="Ideas, citas, preguntas para las docentes…" style="font-family:'Source Serif 4',serif;font-size:17px;line-height:1.6;padding:16px 18px;border-radius:14px;border:2px solid #161316;background:#fff;resize:vertical;outline:none"></textarea>
+          </label>
+          <div style="display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:14px 16px;border-radius:14px;border:2px dashed #161316;background:#fff">
+            <span style="font-size:15px;line-height:1.45;flex:1 1 260px">Las notas se guardan automáticamente, solo en este dispositivo. Descárgalas para no perderlas.</span>
+            <button onClick="{{ downloadAll }}" style="flex:none;font:inherit;font-size:15px;font-weight:700;min-height:44px;padding:10px 16px;border-radius:12px;border:2px solid #161316;background:#F58A1F;color:#161316;cursor:pointer">Descargar mis respuestas</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isAuthors }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Autoras" style="display:flex;flex-direction:column;gap:24px">
+      <h1 style="margin:0;font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-0.02em">Las autoras</h1>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:20px">
+        <sc-for list="{{ authors }}" as="a" hint-placeholder-count="2">
+          <div style="background:#fff;border:2px solid #161316;border-radius:22px;overflow:hidden;display:flex;flex-direction:column">
+            <div style="aspect-ratio:4/3;background:{{ a.color }};display:grid;place-items:center;border-bottom:2px solid #161316">
+              <span style="font-size:13px;font-weight:700;letter-spacing:0.08em;padding:6px 12px;background:#fff;border:2px dashed #161316;border-radius:999px">FOTO DE {{ a.upper }}</span>
+            </div>
+            <div style="padding:20px;display:flex;flex-direction:column;gap:10px">
+              <span style="font-size:24px;font-weight:800">{{ a.name }}</span>
+              <span style="font-size:14px;font-weight:600;color:#7A3FB8">{{ a.role }}</span>
+              <p style="margin:0;font-family:'Source Serif 4',serif;font-size:17px;line-height:1.6;color:#3a3238">{{ a.bio }}</p>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="padding:20px;background:#fff;border:2px solid #161316;border-radius:18px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:18px;font-weight:800">Consultas</span>
+        <span style="font-size:16px;line-height:1.5;color:#3a3238">Si tienes dudas sobre el contenido del curso, puedes escribir a las docentes a <a href="mailto:consultas@correo.com" style="font-weight:700">consultas@correo.com</a>.</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isCert }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Certificado" style="display:flex;flex-direction:column;gap:20px">
+      <sc-if value="{{ certLocked }}" hint-placeholder-val="{{ true }}">
+        <div style="max-width:620px;display:flex;flex-direction:column;gap:16px">
+          <h1 style="margin:0;font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-0.02em">Tu certificado</h1>
+          <p style="margin:0;font-size:17px;line-height:1.5;color:#3a3238">Se habilita cuando veas los cuatro videos y apruebes cada cuestionario con {{ passPct }}% o más.</p>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ checklist }}" as="c" hint-placeholder-count="4">
+              <div style="display:flex;gap:12px;align-items:center;padding:14px 16px;background:#fff;border:2px solid #161316;border-radius:14px">
+                <span style="flex:none;width:26px;height:26px;border-radius:50%;border:2px solid #161316;background:{{ c.dot }};display:grid;place-items:center;font-size:14px;font-weight:900">{{ c.mark }}</span>
+                <span style="font-size:16px;font-weight:600;flex:1">{{ c.title }}</span>
+                <span style="font-size:13px;color:#4a4148">{{ c.detail }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ certReady }}" hint-placeholder-val="{{ false }}">
+        <div data-noprint="" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <h1 style="margin:0;font-size:28px;font-weight:800">¡Felicitaciones, {{ firstName }}!</h1>
+          <button onClick="{{ printCert }}" style="font:inherit;font-size:16px;font-weight:700;padding:13px 20px;border-radius:14px;border:none;background:#161316;color:#fff;cursor:pointer">Descargar / imprimir</button>
+        </div>
+        <div style="width:100%;max-width:1000px;aspect-ratio:1.414/1;background:#fff;border:2px solid #161316;border-radius:8px;display:flex;overflow:hidden">
+          <div style="flex:none;width:4%;display:flex;flex-direction:column">
+            <div style="flex:1;background:#F5CE2E"></div><div style="flex:1;background:#F06A9B"></div><div style="flex:1;background:#2BB3C9"></div><div style="flex:1;background:#7A3FB8"></div><div style="flex:1;background:#F58A1F"></div>
+          </div>
+          <div style="flex:1;padding:5% 6%;display:flex;flex-direction:column;justify-content:space-between;text-align:center;align-items:center;container-type:inline-size">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:0.6cqi">
+              <span style="font-size:5.2cqi;font-weight:900;letter-spacing:0.04em">CEREBRO</span>
+              <span style="font-size:1.5cqi;font-weight:700;letter-spacing:0.14em;background:#161316;color:#fff;padding:0.6cqi 1.4cqi;border-radius:0.6cqi">CREADO · CAÍDO · REDIMIDO</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:1.4cqi">
+              <span style="font-size:1.7cqi;font-weight:700;letter-spacing:0.16em;color:#7A3FB8">CERTIFICADO DE PARTICIPACIÓN</span>
+              <span style="font-family:'Source Serif 4',serif;font-size:2cqi;color:#3a3238">Se otorga a</span>
+              <span style="font-family:'Source Serif 4',serif;font-size:5.6cqi;font-weight:600;line-height:1.1;border-bottom:2px solid #161316;padding:0 3cqi 0.8cqi">{{ userName }}</span>
+              <span style="font-family:'Source Serif 4',serif;font-size:2cqi;line-height:1.5;color:#3a3238;max-width:70cqi">por haber completado las cuatro clases del curso asincrónico «Cerebro: creado, caído, redimido».</span>
+            </div>
+            <div style="width:100%;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4cqi;align-items:end">
+              <div style="display:flex;flex-direction:column;gap:0.6cqi;border-top:2px solid #161316;padding-top:1cqi"><span style="font-size:1.7cqi;font-weight:700">Elba Somoza</span><span style="font-size:1.3cqi;color:#4a4148">Autora</span></div>
+              <div style="display:flex;flex-direction:column;gap:0.6cqi"><span style="font-size:1.7cqi;font-weight:700">{{ certDate }}</span><span style="font-size:1.3cqi;color:#4a4148">Fecha de emisión</span></div>
+              <div style="display:flex;flex-direction:column;gap:0.6cqi;border-top:2px solid #161316;padding-top:1cqi"><span style="font-size:1.7cqi;font-weight:700">Daniela Serraino</span><span style="font-size:1.3cqi;color:#4a4148">Autora</span></div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  </main>
+  <footer data-noprint="" style="border-top:2px solid #161316;padding:{{ footPad }}">
+    <div style="max-width:1120px;margin:0 auto;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:#4a4148">
+      <span>Inscripta/o como {{ userName }}</span>
+      <span>¿Consultas? Escribe a las docentes: <a href="mailto:consultas@correo.com">consultas@correo.com</a></span>
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <button onClick="{{ downloadAll }}" style="font:inherit;font-size:13px;background:none;border:none;color:#4a4148;text-decoration:underline;cursor:pointer;padding:0">Descargar mis respuestas</button>
+        <button onClick="{{ logout }}" style="font:inherit;font-size:13px;background:none;border:none;color:#4a4148;text-decoration:underline;cursor:pointer;padding:0">Cambiar de usuario</button>
+      </div>
+    </div>
+  </footer>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;sequential&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;}, &quot;passPct&quot;: {&quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 70, &quot;min&quot;: 50, &quot;max&quot;: 100, &quot;step&quot;: 5, &quot;unit&quot;: &quot;%&quot;, &quot;tsType&quot;: &quot;number&quot;}}">
+const KEY = 'cerebro-curso-v1';
+const UNITS = [
+  { title: 'El cerebro creado', subtitle: 'Diseñados a imagen de Dios: el cerebro como obra admirable y órgano de la relación.', color: '#F5CE2E', ink: '#161316', vid: 'LO9-sMZNCxM',
+    reading: [
+      'La Escritura presenta al ser humano como una unidad: polvo de la tierra y aliento de vida. El cerebro forma parte de ese diseño. Con unos 86 mil millones de neuronas y billones de conexiones, es el órgano que nos permite pensar, recordar, sentir, decidir y relacionarnos con Dios y con los demás.',
+      'Desde el comienzo, el cerebro fue creado para el vínculo. Las investigaciones sobre el desarrollo muestran que las relaciones tempranas moldean sus circuitos: la mirada, la voz y el cuidado de otros organizan la manera en que regulamos las emociones y entendemos el mundo.',
+      'Reconocer al cerebro como creación nos invita a la gratitud y a la mayordomía: cuidarlo con descanso, alimentación, movimiento, aprendizaje y relaciones sanas es también una forma de honrar al Creador.'
+    ],
+    verses: [
+      { ref: 'Génesis 1:27', text: 'Y creó Dios al hombre a su imagen, a imagen de Dios lo creó; varón y hembra los creó.' },
+      { ref: 'Génesis 2:7', text: 'Entonces Jehová Dios formó al hombre del polvo de la tierra, y sopló en su nariz aliento de vida, y fue el hombre un ser viviente.' },
+      { ref: 'Salmo 139:14', text: 'Te alabaré; porque formidables, maravillosas son tus obras; estoy maravillado, y mi alma lo sabe muy bien.' }
+    ],
+    authors: [
+      { name: 'Suzana Herculano-Houzel', work: 'The Human Advantage (2016)', idea: 'Sus métodos de conteo estimaron en unos 86 mil millones el número de neuronas del cerebro humano.' },
+      { name: 'Daniel J. Siegel', work: 'La mente en desarrollo', idea: 'Propone la neurobiología interpersonal: la mente emerge y se organiza en el cerebro a través de las relaciones.' },
+      { name: 'Curt Thompson', work: 'Anatomía del alma', idea: 'Psiquiatra cristiano que integra neurociencia y fe: fuimos creados para conocer y ser conocidos, y eso deja huella en el cerebro.' }
+    ],
+    quiz: [
+      { q: 'Según Génesis 2:7, el ser humano es:', o: ['Solo un espíritu dentro de un cuerpo', 'Una unidad de polvo de la tierra y aliento de vida', 'Un producto exclusivamente biológico'], c: 1 },
+      { q: '¿Cuántas neuronas tiene aproximadamente el cerebro humano?', o: ['86 millones', '86 mil millones', '8 billones'], c: 1 },
+      { q: 'La neurobiología interpersonal sostiene que la mente se organiza principalmente a través de:', o: ['Las relaciones', 'La herencia genética únicamente', 'El aislamiento'], c: 0 },
+      { q: 'Cuidar el cerebro con descanso, alimentación y vínculos sanos se relaciona con:', o: ['La vanidad', 'La mayordomía de lo que Dios creó', 'Una moda reciente'], c: 1 }
+    ],
+    reflect: ['¿Qué aspecto del diseño del cerebro te produce mayor asombro y gratitud?', '¿Qué hábito concreto podrías incorporar esta semana para cuidar tu cerebro como parte de la creación de Dios?']
+  },
+  { title: 'El cerebro caído', subtitle: 'Las consecuencias de la caída: miedo, vergüenza, estrés y heridas que dejan marca.', color: '#7A3FB8', ink: '#FFFFFF', vid: 'aID6jVyZcgo',
+    reading: [
+      'La primera reacción humana después de la caída fue el miedo y el esconderse. La ruptura con Dios alteró también la relación con uno mismo y con los demás, y esa fractura se expresa en todo nuestro ser, incluido el cerebro.',
+      'El estrés crónico mantiene activado el sistema de alarma del cuerpo. Las hormonas del estrés, útiles en una emergencia, sostenidas en el tiempo afectan la memoria, el ánimo y la capacidad de pensar con claridad. Las experiencias traumáticas, a su vez, pueden dejar al cerebro en un estado de alerta permanente.',
+      'Pablo describe la lucha interior de no hacer el bien que se quiere. Hoy entendemos que muchos patrones de pensamiento y conducta se graban como hábitos neuronales. Nombrar estas heridas es el primer paso para buscar sanidad.'
+    ],
+    verses: [
+      { ref: 'Génesis 3:10', text: 'Oí tu voz en el huerto, y tuve miedo, porque estaba desnudo; y me escondí.' },
+      { ref: 'Romanos 7:19', text: 'Porque no hago el bien que quiero, sino el mal que no quiero, eso hago.' },
+      { ref: 'Jeremías 17:9', text: 'Engañoso es el corazón más que todas las cosas, y perverso; ¿quién lo conocerá?' }
+    ],
+    authors: [
+      { name: 'Robert Sapolsky', work: '¿Por qué las cebras no tienen úlcera?', idea: 'Explica cómo la activación sostenida de la respuesta al estrés daña la salud física y afecta regiones como el hipocampo.' },
+      { name: 'Bessel van der Kolk', work: 'El cuerpo lleva la cuenta', idea: 'Describe cómo el trauma reorganiza la forma en que el cerebro y el cuerpo perciben el peligro.' },
+      { name: 'Curt Thompson', work: 'The Soul of Shame', idea: 'Analiza la vergüenza como una experiencia que nos aísla y que se aloja en nuestra memoria corporal y relacional.' }
+    ],
+    quiz: [
+      { q: '¿Cuál fue la primera reacción de Adán después de la caída, según Génesis 3:10?', o: ['Alegría', 'Miedo y esconderse', 'Indiferencia'], c: 1 },
+      { q: 'El estrés crónico puede afectar:', o: ['Solo la piel', 'La memoria, el ánimo y la claridad de pensamiento', 'Nada, el cerebro se adapta siempre'], c: 1 },
+      { q: 'La lucha descrita en Romanos 7:19 se relaciona con:', o: ['Patrones y hábitos difíciles de cambiar', 'La falta de información', 'Un problema solo físico'], c: 0 },
+      { q: 'Según el enfoque de la clase, el primer paso hacia la sanidad es:', o: ['Negar la herida', 'Nombrar y reconocer la herida', 'Esperar que pase sola'], c: 1 }
+    ],
+    reflect: ['¿En qué situaciones reconoces que reaccionas desde el miedo o la vergüenza?', '¿Qué herida o patrón te gustaría presentar a Dios para comenzar un proceso de sanidad?']
+  },
+  { title: 'El cerebro redimido', subtitle: 'Renovación del entendimiento: la neuroplasticidad al servicio de la transformación.', color: '#2BB3C9', ink: '#161316', vid: 'RRZ08Vx49i8',
+    reading: [
+      'La redención no es solo un perdón legal: es una nueva creación. Pablo exhorta a ser transformados por medio de la renovación del entendimiento, un proceso que involucra lo que pensamos, sentimos y practicamos.',
+      'La neurociencia describe la neuroplasticidad: la capacidad del cerebro de reorganizar sus conexiones a lo largo de toda la vida. Lo que repetimos se fortalece; lo que dejamos de practicar se debilita. El cambio es posible, aunque requiere tiempo y constancia.',
+      'Filipenses 4:8 ofrece una guía práctica para orientar la atención. Elegir en qué pensar, junto con la obra del Espíritu Santo y el acompañamiento de la comunidad, va formando nuevos caminos en la mente.'
+    ],
+    verses: [
+      { ref: 'Romanos 12:2', text: 'No os conforméis a este siglo, sino transformaos por medio de la renovación de vuestro entendimiento.' },
+      { ref: '2 Corintios 5:17', text: 'De modo que si alguno está en Cristo, nueva criatura es; las cosas viejas pasaron; he aquí todas son hechas nuevas.' },
+      { ref: 'Filipenses 4:8', text: 'Todo lo que es verdadero, todo lo honesto, todo lo justo, todo lo puro, todo lo amable, todo lo que es de buen nombre; si hay virtud alguna, si algo digno de alabanza, en esto pensad.' }
+    ],
+    authors: [
+      { name: 'Donald Hebb', work: 'The Organization of Behavior (1949)', idea: 'Su principio suele resumirse así: las neuronas que se activan juntas se conectan entre sí.' },
+      { name: 'Norman Doidge', work: 'El cerebro se cambia a sí mismo', idea: 'Reúne casos que muestran que el cerebro adulto puede reorganizarse mediante la práctica.' },
+      { name: 'Dallas Willard', work: 'Renueva tu corazón', idea: 'Entiende la formación espiritual como la transformación de pensamientos, sentimientos, voluntad, cuerpo y relaciones.' }
+    ],
+    quiz: [
+      { q: 'Según Romanos 12:2, la transformación ocurre por medio de:', o: ['La renovación del entendimiento', 'El esfuerzo físico', 'La conformidad con el mundo'], c: 0 },
+      { q: 'La neuroplasticidad es:', o: ['La rigidez del cerebro adulto', 'La capacidad del cerebro de reorganizar sus conexiones', 'Un tipo de cirugía'], c: 1 },
+      { q: '"Las neuronas que se activan juntas se conectan" resume el principio de:', o: ['Sigmund Freud', 'Donald Hebb', 'Charles Darwin'], c: 1 },
+      { q: 'Filipenses 4:8 ofrece una guía para:', o: ['Orientar la atención y los pensamientos', 'Evitar toda emoción', 'Memorizar datos'], c: 0 }
+    ],
+    reflect: ['¿Qué pensamiento recurrente te gustaría reemplazar por uno alineado con Filipenses 4:8?', '¿Qué práctica diaria podría ayudarte a sostener ese cambio en el tiempo?']
+  },
+  { title: 'Una mente renovada', subtitle: 'Prácticas y comunidad: vivir la redención en lo cotidiano.', color: '#F06A9B', ink: '#161316', vid: 'AQw4vIaIKFA',
+    reading: [
+      'La renovación de la mente se sostiene en prácticas concretas: la oración, la lectura de la Palabra, la gratitud, el descanso y la confesión. Cada una, repetida en el tiempo, ejercita la atención y la regulación emocional.',
+      'La sanidad no ocurre en soledad. Santiago vincula la confesión mutua y la oración con ser sanados. Así como las heridas se produjeron en relaciones, muchas veces la restauración llega a través de relaciones seguras.',
+      'La iglesia puede ser un espacio donde las personas son conocidas y acompañadas. Llevar cautivo todo pensamiento a la obediencia a Cristo es una tarea personal y también comunitaria.'
+    ],
+    verses: [
+      { ref: '2 Corintios 10:5', text: 'Llevando cautivo todo pensamiento a la obediencia a Cristo.' },
+      { ref: 'Santiago 5:16', text: 'Confesaos vuestras ofensas unos a otros, y orad unos por otros, para que seáis sanados.' },
+      { ref: 'Hebreos 10:24', text: 'Y considerémonos unos a otros para estimularnos al amor y a las buenas obras.' }
+    ],
+    authors: [
+      { name: 'Andrew Newberg y Mark R. Waldman', work: 'How God Changes Your Brain', idea: 'Estudian con neuroimágenes cómo la oración y la meditación sostenidas se asocian con cambios en la actividad cerebral.' },
+      { name: 'Elba Somoza', work: 'Sanidad en las relaciones familiares', idea: 'Recorre el origen de muchas heridas emocionales y propone un camino de sanidad en el Señor.' },
+      { name: 'Curt Thompson', work: 'Anatomía del alma', idea: 'Sostiene que ser conocidos en comunidad es un medio clave para la transformación.' }
+    ],
+    quiz: [
+      { q: '¿Cuál de estas es una práctica que sostiene la renovación de la mente?', o: ['La oración', 'El aislamiento prolongado', 'La preocupación constante'], c: 0 },
+      { q: 'Santiago 5:16 vincula la sanidad con:', o: ['La confesión mutua y la oración', 'El éxito económico', 'El silencio absoluto'], c: 0 },
+      { q: 'Según la clase, muchas veces la restauración llega a través de:', o: ['Relaciones seguras', 'Evitar a los demás', 'La autosuficiencia'], c: 0 },
+      { q: '"Llevar cautivo todo pensamiento a la obediencia a Cristo" aparece en:', o: ['Génesis 1:27', '2 Corintios 10:5', 'Salmo 23:1'], c: 1 }
+    ],
+    reflect: ['¿Con quién podrías compartir lo que aprendiste en este curso?', '¿Qué práctica vas a sostener de ahora en adelante para cuidar una mente renovada?']
+  }
+];
+const FUND = [
+  ['Génesis 2:7 presenta al ser humano como una unidad: Dios forma el cuerpo del polvo y sopla aliento de vida. No hay separación entre lo físico y lo espiritual; el cerebro forma parte del diseño integral.',
+   'Los estudios de Suzana Herculano-Houzel estimaron unos 86 mil millones de neuronas, conectadas por billones de sinapsis.',
+   'Daniel J. Siegel sostiene que la mente emerge de la interacción entre el cerebro y las relaciones. Los vínculos tempranos organizan los circuitos de regulación emocional.',
+   'Si el cerebro es obra de Dios (Salmo 139:14), cuidarlo es parte de la mayordomía que se nos confió sobre la creación, empezando por nuestro propio cuerpo.'],
+  ['Génesis 3:10: «tuve miedo… y me escondí». La ruptura con Dios se expresa primero como miedo y ocultamiento, la base de la vergüenza.',
+   'Robert Sapolsky explica que las hormonas del estrés sostenidas en el tiempo afectan regiones como el hipocampo, vinculado a la memoria y al ánimo.',
+   'Pablo describe la distancia entre querer y hacer. Muchos patrones se consolidan como hábitos neuronales que no cambian solo con buena intención.',
+   'Lo que no se nombra no puede presentarse a Dios ni trabajarse en comunidad. Reconocer la herida abre el camino a la sanidad.'],
+  ['Romanos 12:2 afirma que la transformación ocurre «por medio de la renovación de vuestro entendimiento»: un cambio en la manera de pensar.',
+   'La neuroplasticidad es la capacidad del cerebro de reorganizar sus conexiones a lo largo de toda la vida, lo que hace posible el cambio.',
+   'Donald Hebb propuso en 1949 que la activación conjunta y repetida de neuronas fortalece su conexión. Lo que practicamos se consolida.',
+   'Filipenses 4:8 termina con «en esto pensad»: una indicación práctica sobre dónde poner la atención para ir formando nuevos caminos mentales.'],
+  ['La oración ejercita la atención y la regulación emocional. Newberg y Waldman asocian su práctica sostenida con cambios en la actividad cerebral.',
+   'Santiago 5:16 une confesión mutua, oración y sanidad: «para que seáis sanados».',
+   'Así como muchas heridas se produjeron en relaciones, la restauración suele llegar en relaciones seguras donde somos conocidos (Curt Thompson).',
+   'El texto es 2 Corintios 10:5. Pablo presenta los pensamientos como algo que puede someterse a Cristo, no como algo que nos domina.']
+];
+const AUTHORS = [
+  { name: 'Elba Somoza', role: 'Lic. en Servicio Social · Directora de Psicodrama', color: '#F5CE2E',
+    bio: 'Desde 1992 trabaja en la sanidad de las heridas de la vida, con cursos y seminarios en iglesias de Argentina y del exterior. Desde 2001 coordina grupos de recuperación de situaciones de abuso en la Iglesia Buenas Nuevas (Buenos Aires), donde integra el Consejo Pastoral. Es autora de «Sanidad en las relaciones familiares».' },
+  { name: 'Daniela Serraino', role: 'Coautora del curso', color: '#2BB3C9',
+    bio: 'Biografía pendiente: no encontramos información pública verificada. Reemplaza este texto con su formación, ministerio y trayectoria.' }
+];
+
+class Component extends DCLogic {
+  state = this.load();
+  load() {
+    let s = {};
+    try { s = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+    return { user: s.user || null, progress: s.progress || {}, screen: 'home', unit: 0, tab: 'video', formName: '', formEmail: '', formError: '' };
+  }
+  componentDidMount() {
+    this.onResize = () => this.setState({ vw: window.innerWidth });
+    window.addEventListener('resize', this.onResize);
+    this.onResize();
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); }
+  save(patch) {
+    this.setState(patch, () => localStorage.setItem(KEY, JSON.stringify({ user: this.state.user, progress: this.state.progress })));
+  }
+  prog(i) { return this.state.progress[i] || { watched: false, answers: {}, score: null, reflect: ['', ''] }; }
+  setProg(i, patch) { this.save({ progress: { ...this.state.progress, [i]: { ...this.prog(i), ...patch } } }); }
+  passPct() { return this.props.passPct ?? 70; }
+  passed(i) { const p = this.prog(i); return p.score != null && p.score >= this.passPct(); }
+  done(i) { return this.prog(i).watched && this.passed(i); }
+  unlocked(i) { return !(this.props.sequential ?? true) || i === 0 || this.done(i - 1); }
+  download() {
+    const u = this.state.user || {}, L = [];
+    L.push('CEREBRO: CREADO · CAÍDO · REDIMIDO', 'Mis respuestas y notas', '', 'Nombre: ' + (u.name || ''), 'Correo: ' + (u.email || ''), 'Fecha: ' + new Date().toLocaleString('es-AR'), '');
+    UNITS.forEach((U, i) => {
+      const p = this.prog(i);
+      L.push('════════════════════════════', 'CLASE ' + (i + 1) + ': ' + U.title.toUpperCase(), '════════════════════════════', '');
+      L.push('Video: ' + (p.watched ? 'visto' : 'pendiente'));
+      L.push('Cuestionario: ' + (p.score != null ? p.score + '%' : 'sin enviar'), '');
+      U.quiz.forEach((q, qi) => {
+        const a = p.answers[qi];
+        L.push((qi + 1) + '. ' + q.q, '   Mi respuesta: ' + (a != null ? q.o[a] + (p.score != null ? (a === q.c ? ' (correcta)' : ' (incorrecta)') : '') : '—'));
+        if (p.score != null && a === q.c) L.push('   Fundamentación: ' + FUND[i][qi]);
+        L.push('');
+      });
+      L.push('REFLEXIÓN');
+      U.reflect.forEach((q, ri) => L.push('• ' + q, '  ' + (((p.reflect || [])[ri]) || '—'), ''));
+      L.push('NOTAS', (p.notes || '—'), '', '');
+    });
+    const blob = new Blob([L.join('\n')], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'Cerebro - mis respuestas' + (u.name ? ' - ' + u.name : '') + '.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+  go(screen, extra = {}) { this.setState({ screen, ...extra }); window.scrollTo(0, 0); }
+
+  renderVals() {
+    const { user, screen, unit, tab } = this.state;
+    const pass = this.passPct();
+    const doneCount = UNITS.filter((_, i) => this.done(i)).length;
+    const allDone = doneCount === UNITS.length;
+    const firstOpen = UNITS.findIndex((_, i) => !this.done(i));
+    const nav = [['home', 'Curso'], ['authors', 'Autoras'], ['cert', 'Certificado']].map(([k, label]) => {
+      const act = screen === k || (k === 'home' && screen === 'unit');
+      return { label, go: () => this.go(k), bg: act ? '#161316' : 'transparent', fg: act ? '#fff' : '#161316' };
+    });
+    const units = UNITS.map((u, i) => {
+      const lock = !this.unlocked(i), d = this.done(i), p = this.prog(i);
+      const status = lock ? 'Bloqueada' : d ? 'Completada' : (p.watched || p.score != null) ? 'En curso' : 'Disponible';
+      return { num: '0' + (i + 1), title: u.title, subtitle: u.subtitle, color: u.color, ink: u.ink, status,
+        cursor: lock ? 'not-allowed' : 'pointer', opacity: lock ? 0.55 : 1,
+        open: () => { if (!lock) this.go('unit', { unit: i, tab: 'video' }); } };
+    });
+    const U = UNITS[unit], P = this.prog(unit);
+    const tabDefs = [['video', 'Video', P.watched ? '✓' : ''], ['reading', 'Lectura', ''], ['quiz', 'Cuestionario', P.score != null ? P.score + '%' : ''], ['reflect', 'Reflexión', ''], ['notes', 'Notas', P.notes ? '•' : '']];
+    const tabs = tabDefs.map(([k, label, badge]) => ({ label, badge, go: () => this.setState({ tab: k }),
+      bg: tab === k ? U.color : '#fff', fg: tab === k ? U.ink : '#161316' }));
+    const submitted = P.score != null;
+    const quiz = U.quiz.map((q, qi) => ({ n: qi + 1, q: q.q, fund: FUND[unit][qi], showFund: submitted && P.answers[qi] === q.c, opts: q.o.map((text, oi) => {
+      const sel = P.answers[qi] === oi;
+      let bg = sel ? '#FCF1F4' : '#fff', bd = sel ? '#161316' : '#E6D9DE', dot = sel ? '#161316' : '#fff';
+      if (submitted && sel) { const ok = oi === q.c; bg = ok ? '#D8F3E4' : '#FBDCE2'; bd = ok ? '#1F8A55' : '#C8243F'; dot = ok ? '#1F8A55' : '#C8243F'; }
+      return { text, bg, bd, dot, pick: () => this.setProg(unit, { answers: { ...P.answers, [qi]: oi }, score: null }) };
+    }) }));
+    const ok = this.passed(unit);
+    const checklist = UNITS.map((u, i) => { const p = this.prog(i), d = this.done(i);
+      return { title: '0' + (i + 1) + ' · ' + u.title, dot: d ? '#F58A1F' : '#fff', mark: d ? '✓' : '',
+        detail: (p.watched ? 'Video visto' : 'Video pendiente') + ' · ' + (p.score != null ? p.score + '%' : 'Sin cuestionario') }; });
+    const mobile = (this.state.vw || window.innerWidth) < 720;
+    return {
+      isMobile: mobile, isDesktop: !mobile,
+      mainPad: mobile ? '20px 20px 40px' : '28px 20px 64px',
+      footPad: mobile ? '18px 20px calc(88px + env(safe-area-inset-bottom))' : '18px 20px',
+      isRegister: !user, isApp: !!user,
+      formName: this.state.formName, formEmail: this.state.formEmail, formError: this.state.formError,
+      setFormName: e => this.setState({ formName: e.target.value }),
+      setFormEmail: e => this.setState({ formEmail: e.target.value }),
+      register: () => {
+        const name = this.state.formName.trim(), email = this.state.formEmail.trim();
+        if (name.length < 3) return this.setState({ formError: 'Ingresa tu nombre completo.' });
+        if (!/^\S+@\S+\.\S+$/.test(email)) return this.setState({ formError: 'Ingresa un correo válido.' });
+        this.save({ user: { name, email }, formError: '', screen: 'home' });
+      },
+      logout: () => this.save({ user: null, progress: {}, formName: '', formEmail: '', screen: 'home' }),
+      userName: user ? user.name : '', firstName: user ? user.name.split(' ')[0].toUpperCase() : '',
+      nav, goHome: () => this.go('home'),
+      isHome: screen === 'home', isUnit: screen === 'unit', isAuthors: screen === 'authors', isCert: screen === 'cert',
+      overallLabel: doneCount + ' de 4 clases', overallW: (doneCount / 4 * 100) + '%',
+      continueLabel: allDone ? 'Ver mi certificado' : doneCount === 0 && !this.prog(0).watched ? 'Empezar la clase 1' : 'Continuar con la clase ' + (firstOpen + 1),
+      continueCourse: () => allDone ? this.go('cert') : this.go('unit', { unit: firstOpen, tab: 'video' }),
+      units,
+      cu: { num: unit + 1, title: U.title, subtitle: U.subtitle, reading: U.reading, verses: U.verses, authors: U.authors,
+        embed: 'https://www.youtube-nocookie.com/embed/' + U.vid + '?rel=0' },
+      tabs, tabVideo: tab === 'video', tabReading: tab === 'reading', tabQuiz: tab === 'quiz', tabReflect: tab === 'reflect', tabNotes: tab === 'notes',
+      notesValue: P.notes || '', notesChange: e => this.setProg(unit, { notes: e.target.value }),
+      downloadAll: () => this.download(),
+      markWatched: () => { this.setProg(unit, { watched: true }); this.setState({ tab: 'reading' }); },
+      watchLabel: P.watched ? '✓ Video visto · ir a la lectura' : 'Marcar como visto',
+      watchBg: P.watched ? U.color : '#161316', watchFg: P.watched ? U.ink : '#fff',
+      goQuiz: () => this.setState({ tab: 'quiz' }), goReflect: () => this.setState({ tab: 'reflect' }),
+      passPct: pass, quiz,
+      submitLabel: submitted ? 'Volver a enviar' : 'Enviar respuestas',
+      submitQuiz: () => {
+        const n = U.quiz.filter((q, qi) => P.answers[qi] === q.c).length;
+        this.setProg(unit, { score: Math.round(n / U.quiz.length * 100) });
+      },
+      showResult: submitted, canNext: submitted && ok,
+      resultBg: ok ? '#D8F3E4' : '#FBDCE2',
+      resultTitle: submitted ? (ok ? 'Aprobado · ' + P.score + '%' : 'Obtuviste ' + P.score + '%') : '',
+      resultText: ok ? (P.watched ? 'Clase completada.' : 'Recuerda marcar el video como visto para completar la clase.') : 'Revisa la lectura y vuelve a intentarlo. Las respuestas marcadas en rojo son incorrectas.',
+      reflections: U.reflect.map((q, ri) => ({ q, value: (P.reflect || [])[ri] || '',
+        change: e => { const r = [...(P.reflect || ['', ''])]; r[ri] = e.target.value; this.setProg(unit, { reflect: r }); } })),
+      nextLabel: unit < 3 ? 'Siguiente clase' : 'Ir al certificado',
+      nextUnit: () => {
+        if (unit < 3 && this.unlocked(unit + 1)) this.go('unit', { unit: unit + 1, tab: 'video' });
+        else if (unit < 3) this.go('home'); else this.go('cert');
+      },
+      authors: AUTHORS.map(a => ({ ...a, upper: a.name.split(' ')[0].toUpperCase() })),
+      certLocked: !allDone, certReady: allDone, checklist,
+      certDate: new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' }),
+      printCert: () => window.print()
+    };
+  }
+}
+</script>
+</body>
+</html>
